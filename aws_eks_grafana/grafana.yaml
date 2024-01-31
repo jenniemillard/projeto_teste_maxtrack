@@ -1,0 +1,72 @@
+persistence:
+  storageClassName: "gp2"
+  enabled: true
+ingress:
+  enabled: true
+  hosts: ["grafana-teste.com"]
+  path: /
+  ingressClassName: alb
+  annotations:
+    alb.ingress.kubernetes.io/load-balancer-name: "lb-grafana-svc"
+    alb.ingress.kubernetes.io/target-type: "ip"
+    alb.ingress.kubernetes.io/scheme: "internal"
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+service:
+  port: "80"
+  portName: "grafana"
+  type: "LoadBalancer"
+  annotations:
+    alb.ingress.kubernetes.io/target-type: ip
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      -  name: Prometheus
+         type: prometheus
+         url: http://prometheus-server.prometheus.svc.cluster.local
+         access: proxy
+         isDefault: true
+dashboardProviders:
+ dashboardproviders.yaml:
+   apiVersion: 1
+   providers:
+   - name: 'default'
+     orgId: 1
+     folder: ''
+     type: file
+     disableDeletion: false
+     editable: true
+     options:
+       path: /var/lib/grafana/dashboards/default
+dashboards:
+  default:
+    kubernetes_global:
+      file: dashboards/Kubernetes_Views_Global.json
+    prometheus-stats:
+      gnetId: 2
+      revision: 2
+      datasource: Prometheus
+    kubestate-metrics:
+      gnetId: 13332
+      revision: 12
+      datasource: Prometheus
+    kubernetes-global:
+      gnetId: 15757
+      revision: 31
+      datasource: Prometheus
+    kubernetes-namespace-view:
+      gnetId: 15758
+      revision: 26
+      datasource: Prometheus
+    kubernetes-pods-view:
+      gnetId: 15760
+      revision: 20
+      datasource: Prometheus
+    kubernetes-nodes-view:
+      gnetId: 15759
+      revision: 19
+      datasource: Prometheus
+    kubernetes-storage-volumes:
+      gnetId: 11454
+      revision: 14
+      datasource: Prometheus

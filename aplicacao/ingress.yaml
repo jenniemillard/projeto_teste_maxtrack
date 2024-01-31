@@ -1,0 +1,35 @@
+#Define regras para o tráfego de entrada na aplicação.
+#Está configurado para rotear o tráfego para o serviço appteste-service quando a solicitação é feita para o host app.teste.aws.com e no caminho /.
+#Usa o controlador de Ingress do AWS (ALB - Application Load Balancer).
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lb-app-teste-svc
+  namespace: teste
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/load-balancer-name: "lb-app-teste-svc"
+    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/target-type: ip
+    
+        #alb.ingress.kubernetes.io/subnets: ${module.vpc.vpc_private_subnets}
+
+spec:
+  ingressClassName: alb
+  defaultBackend:
+    service:
+      name: appteste-service
+      port:
+        name: http
+  rules:
+    - host: app.testemaxtrack.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: appteste-service
+                port:
+                  name: http

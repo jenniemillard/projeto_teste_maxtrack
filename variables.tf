@@ -1,3 +1,37 @@
+variable "aws_region" {
+  description = "Região da AWS onde os recursos serão criados"
+  default     = "us-east-1"
+}
+
+variable "allowed_account_ids" {
+  description = "ID da conta AWS"
+  type        = list(string)
+  default     = ["818535027182"]
+
+}
+
+variable "cluster_name" {
+  description = "Nome do Cluster EKS"
+  type        = string
+  default     = "eks-teste"
+
+}
+
+variable "cluster_version" {
+  description = "versão do cluster"
+  type        = string
+  default     = "1.27"
+
+}
+
+variable "tipomaquina" {
+  description = "Tipo de Instancia EC2"
+  type        = string
+  default     = "t2.xlarge"
+}
+
+######################################## VPC ########################################
+
 variable "vpc_configuration" {
   type = object({
     cidr_block = string

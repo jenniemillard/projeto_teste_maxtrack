@@ -4,7 +4,9 @@ resource "aws_vpc" "this" {
   enable_dns_support   = true
 
   tags = {
-    Name = "terraform"
+    Name                                        = "vpc_teste"
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
+    "kubernetes.io/role/elb"                    = "1"
   }
 }
 
@@ -21,7 +23,9 @@ resource "aws_subnet" "this" {
   map_public_ip_on_launch = each.value.public
 
   tags = {
-    Name = each.key
+    Name                                        = each.key
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
+    "kubernetes.io/role/internal-elb"           = "1"
   }
 }
 
@@ -32,9 +36,9 @@ resource "aws_nat_gateway" "this" {
   subnet_id     = aws_subnet.this[local.subnet_pairs[each.value]].id
 }
 
-resource "aws_eip" "nat_gateway" {
-  for_each = toset(local.private_subnets)
-  vpc      = true
+resource "aws_eip" "nat_gateway" {        #elastic IP
+  for_each = toset(local.private_subnets) #para cada subnet
+  domain   = "vpc"
 
   depends_on = [aws_internet_gateway.this]
 }

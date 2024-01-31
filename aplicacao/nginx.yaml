@@ -1,0 +1,71 @@
+#Descreve como as instâncias da aplicação (no caso, o servidor Nginx) devem ser implantadas.
+#Usa uma imagem do Nginx e especifica a criação de duas réplicas.
+#Define afinidade com nós específicos (amd64 e arm64) e sistema operacional Linux.
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-app-teste-deployment
+  namespace: teste
+  labels:
+    app: nginx-app-teste
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx-app-teste
+  template:
+    metadata:
+      labels:
+        app: nginx-app-teste
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+                - arm64
+      containers:
+      - name: nginx
+        image: public.ecr.aws/nginx/nginx:1.23
+        ports:
+        - name: http
+          containerPort: 80
+        imagePullPolicy: IfNotPresent
+      nodeSelector:
+        kubernetes.io/os: linux
+---
+
+#Define um serviço chamado appteste-service que agrupa as instâncias do Nginx.
+#Configurado para ser do tipo LoadBalancer e expõe as portas 80 e 443.
+#Inclui anotações para configuração específica do AWS Load Balancer (nome do balanceador de carga, esquema, etc.).
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: appteste-service
+  annotations:
+    #    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: ""
+    service.beta.kubernetes.io/aws-load-balancer-name: "lb-app-teste-svc"
+    #service.beta.kubernetes.io/aws-load-balancer-scheme: "internal"
+  namespace: teste
+  labels:
+    app: nginx-app-teste
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx-app-teste
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      name: http
+    - protocol: TCP
+      port: 443
+      targetPort: 80
+      name: https
