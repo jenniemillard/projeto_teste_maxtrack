@@ -39,4 +39,4 @@ override.tf.json
 terraform.rc
 
 #Ignorar bkps
-**/bkp/*
+bkp/
