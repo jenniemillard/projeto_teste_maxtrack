@@ -7,7 +7,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-app-teste-deployment
-  namespace: teste
+  namespace: cdteste
   labels:
     app: nginx-app-teste
 spec:
