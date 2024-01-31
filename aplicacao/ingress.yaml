@@ -6,7 +6,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: lb-app-teste-svc
-  namespace: teste
+  namespace: cdteste
   annotations:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/load-balancer-name: "lb-app-teste-svc"
