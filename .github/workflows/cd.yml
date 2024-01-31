@@ -23,7 +23,7 @@ jobs:                                  # Define os trabalhos (jobs) a serem exec
       - name: Set up kubectl             # para acessar o cluster Kubernetes no Amazon EKS.
         run: |
           aws eks --region us-east-1 update-kubeconfig --name eks-teste #Utiliza o AWS CLI para atualizar o arquivo kubeconfig local com as credenciais e as informações do cluster EKS.
-          kubectl config use-context eks-teste --namespace=cdteste    # Define o contexto do kubectl para o cluster EKS recém-configurado. O contexto é essencialmente um conjunto de parâmetros que aponta para um cluster, usuário e namespace específicos.
+          kubectl config use-context eks-teste                        # Define o contexto do kubectl para o cluster EKS recém-configurado. O contexto é essencialmente um conjunto de parâmetros que aponta para um cluster, usuário e namespace específicos.
           kubectl config current-context                              # Exibe o contexto atualmente configurado. Isso é útil para verificar se o contexto foi definido corretamente.
 
       - name: Deploy to Kubernetes                                      
