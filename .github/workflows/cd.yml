@@ -23,8 +23,8 @@ jobs:                                  # Define os trabalhos (jobs) a serem exec
       - name: Set up kubectl             # para acessar o cluster Kubernetes no Amazon EKS.
         run: |
           aws eks update-kubeconfig --region us-east-1 --name eks-teste   #Utiliza o AWS CLI para atualizar o arquivo kubeconfig local com as credenciais e as informações do cluster EKS.
-          #kubectl config use-context eks-teste                            # Define o contexto do kubectl para o cluster EKS recém-configurado. O contexto é essencialmente um conjunto de parâmetros que aponta para um cluster, usuário e namespace específicos.
-          #kubectl config current-context                                  # Exibe o contexto atualmente configurado. Isso é útil para verificar se o contexto foi definido corretamente.
+          echo "AWS_KUBE_CONFIG=$HOME/.kube/config" >> $GITHUB_ENV
+          echo "KUBECONFIG=$HOME/.kube/config" >> $GITHUB_ENV
 
       - name: Deploy to Kubernetes                                      
         run: kubectl apply -f /projeto_teste_maxtrack/aplicacao/ --namespace cdteste # aplicando os manifestos Kubernetes para implantar suas aplicações no cluster configurado. 
