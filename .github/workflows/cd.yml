@@ -27,4 +27,4 @@ jobs:                                  # Define os trabalhos (jobs) a serem exec
           echo "KUBECONFIG=$HOME/.kube/config" >> $GITHUB_ENV
 
       - name: Deploy to Kubernetes                                      
-        run: kubectl apply -f /projeto_teste_maxtrack/aplicacao/ --namespace cdteste # aplicando os manifestos Kubernetes para implantar suas aplicações no cluster configurado. 
+        run: kubectl apply -f aplicacao/ --namespace cdteste # aplicando os manifestos Kubernetes para implantar suas aplicações no cluster configurado. 
