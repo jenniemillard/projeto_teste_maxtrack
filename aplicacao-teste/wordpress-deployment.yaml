@@ -35,6 +35,7 @@ metadata:
   labels:
     app: wordpress
 spec:
+  replicas: 1             # Número inicial de réplicas
   selector:
     matchLabels:
       app: wordpress
@@ -70,3 +71,20 @@ spec:
       - name: wordpress-persistent-storage
         persistentVolumeClaim:
           claimName: wp-pv-claim
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: wordpress-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: wordpress
+  minReplicas: 1  # Número mínimo de réplicas
+  maxReplicas: 4  # Número máximo de réplicas
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 80 #especifica as métricas com base nas quais o HPA tomará decisões de escalonamento. Neste caso, a métrica é o uso médio da CPU, e o HPA tentará manter o uso médio da CPU em 80%.
