@@ -1,0 +1,40 @@
+name: Continuous Deployment
+
+on:
+  push:                                # Especifica que esse fluxo de trabalho deve ser acionado quando ocorrer um evento de push no repositório.
+    branches:                          # Limita a execução do fluxo de trabalho apenas às alterações na branch "main".
+      - main
+
+jobs:                                  # Define os trabalhos (jobs) a serem executados no contexto deste fluxo de trabalho.
+  deploy:                              # Nome do trabalho que será executado.
+    runs-on: ubuntu-latest             # Especifica que o trabalho deve ser executado em uma máquina virtual Ubuntu mais recente.
+
+    steps:                             # Define uma lista de etapas a serem executadas dentro deste trabalho.
+      - name: Checkout Repository      # Nome da primeira etapa, que é verificar (checkout) o repositório.
+        uses: actions/checkout@v2      # Usa a ação oficial de checkout para clonar o repositório no ambiente de execução do GitHub Actions.
+
+      - name: Configure AWS Credentials  # Nome da segunda etapa, que configura o kubectl.
+        uses: aws-actions/configure-aws-credentials@v1   # para configurar as credenciais AWS.
+        with:                             
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # id de acesso a AWS
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} #Chave de acesso a AWS
+          aws-region: us-east-1          # Região do EKS
+
+      - name: Set up kubectl             # para acessar o cluster Kubernetes no Amazon EKS.
+        run: |
+          aws eks update-kubeconfig --region us-east-1 --name eks-teste   #Utiliza o AWS CLI para atualizar o arquivo kubeconfig local com as credenciais e as informações do cluster EKS.
+          echo "AWS_KUBE_CONFIG=$HOME/.kube/config" >> $GITHUB_ENV
+          echo "KUBECONFIG=$HOME/.kube/config" >> $GITHUB_ENV
+          
+      - name: Deploy do PV                                      
+        run: kubectl apply -f ./aplicacao-teste/PVs --namespace teste # aplicando os manifestos Kubernetes para implantar suas aplicações no cluster configurado.
+     
+      - name: Deploy to Kubernetes                                      
+        run: kubectl apply -k ./aplicacao-teste/ --namespace teste # aplicando os manifestos Kubernetes para implantar suas aplicações no cluster configurado.
+
+      - name: Execute comandos dentro do pod
+        run: |
+          EXTERNAL_IP=$(kubectl get svc --namespace teste wordpress -o jsonpath='{.status.loadBalancer.ingress[0].ip}') # Obtendo o EXTERNAL-IP do serviço wordpress
+          POD_NAME=$(kubectl get pods --namespace teste -l tier=mysql -o jsonpath='{.items[0].metadata.name}') # Obtendo o nome do pod usando o seletor de rótulo
+          COMMANDS="USE wordpress; UPDATE wp_options SET option_value = 'http://${EXTERNAL_IP}' WHERE option_name = 'home'; UPDATE wp_options SET option_value = 'http://${EXTERNAL_IP}' WHERE option_name = 'siteurl'" # Substituindo EXTERNAL-IP nos comandos MySQL
+          kubectl exec -it $POD_NAME --namespace teste -- mysql -u wordpress -p${{ secrets.MYSQL_PASS }} -e "$COMMANDS" # Execute o comando dentro do pod
