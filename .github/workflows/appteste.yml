@@ -24,7 +24,7 @@ jobs:                                  # Define os trabalhos (jobs) a serem exec
         run: |
           aws eks --region us-east-1 update-kubeconfig --name eks-teste
           mkdir -p $HOME/.kube
-          cp $GITHUB_WORKSPACE/.kube/config $HOME/.kube/config
+          cp $HOME/.kube/config $HOME/.kube/config
           echo "AWS_KUBE_CONFIG=$HOME/.kube/config" >> $GITHUB_ENV
           echo "KUBECONFIG=$HOME/.kube/config" >> $GITHUB_ENV
           
