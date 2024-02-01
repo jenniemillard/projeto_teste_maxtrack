@@ -1,4 +1,4 @@
-name: Continuous Deployment
+name: Continuous Deployment Nginx e Ingress
 
 on:
   push:                                # Especifica que esse fluxo de trabalho deve ser acionado quando ocorrer um evento de push no repositório.

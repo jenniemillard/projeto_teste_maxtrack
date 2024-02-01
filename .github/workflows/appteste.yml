@@ -1,4 +1,4 @@
-name: Continuous Deployment
+name: Continuous Deployment Teste Pratico
 
 on:
   push:                                # Especifica que esse fluxo de trabalho deve ser acionado quando ocorrer um evento de push no repositório.
@@ -26,6 +26,10 @@ jobs:                                  # Define os trabalhos (jobs) a serem exec
           echo "AWS_KUBE_CONFIG=$HOME/.kube/config" >> $GITHUB_ENV
           echo "KUBECONFIG=$HOME/.kube/config" >> $GITHUB_ENV
           
+      - name: Install VPA CRD
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes/autoscaler/master/vertical-pod-autoscaler/deploy/manifests/custom-resource-definitions/verticalpodautoscaler.updater.autoscaling.k8s.io.yaml
+                 
       - name: Deploy do PV                                      
         run: kubectl apply -f ./aplicacao-teste/PVs --namespace teste # aplicando os manifestos Kubernetes para implantar suas aplicações no cluster configurado.
      
