@@ -72,7 +72,7 @@ spec:
         persistentVolumeClaim:
           claimName: wp-pv-claim
 ---
-apiVersion: autoscaling/v2
+apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
   name: wordpress-hpa
@@ -87,4 +87,4 @@ spec:
   - type: Resource
     resource:
       name: cpu
-      targetAverageUtilization: 80 #especifica as métricas com base nas quais o HPA tomará decisões de escalonamento. Neste caso, a métrica é o uso médio da CPU, e o HPA tentará manter o uso médio da CPU em 80%.
+      targetCPUUtilizationPercentage: 80 #especifica as métricas com base nas quais o HPA tomará decisões de escalonamento. Neste caso, a métrica é o uso médio da CPU, e o HPA tentará manter o uso médio da CPU em 80%.
