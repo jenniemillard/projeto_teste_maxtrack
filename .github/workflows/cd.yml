@@ -32,5 +32,5 @@ jobs:                                  # Define os trabalhos (jobs) a serem exec
           git reset --hard
        
       - name: Deploy to Kubernetes                                      
-        run: kubectl apply -f aplicacao/ --namespace cdteste # aplicando os manifestos Kubernetes para implantar suas aplicações no cluster configurado. 
+        run: kubectl apply -f ./aplicacao/ --namespace cdteste # aplicando os manifestos Kubernetes para implantar suas aplicações no cluster configurado. 
         working-directory: aplicacao
