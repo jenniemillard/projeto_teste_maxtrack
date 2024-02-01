@@ -31,3 +31,10 @@ jobs:                                  # Define os trabalhos (jobs) a serem exec
      
       - name: Deploy to Kubernetes                                      
         run: kubectl apply -k ./aplicacao-teste/ --namespace teste # aplicando os manifestos Kubernetes para implantar suas aplicações no cluster configurado.
+
+      - name: Execute comandos dentro do pod
+        run: |
+          EXTERNAL_IP=$(kubectl get svc --namespace teste wordpress -o jsonpath='{.status.loadBalancer.ingress[0].ip}') # Obtendo o EXTERNAL-IP do serviço wordpress
+          POD_NAME=$(kubectl get pods --namespace teste -l tier=mysql -o jsonpath='{.items[0].metadata.name}') # Obtendo o nome do pod usando o seletor de rótulo
+          COMMANDS="UPDATE wp_options SET option_value = 'http://${EXTERNAL_IP}' WHERE option_name = 'home'; UPDATE wp_options SET option_value = 'http://${EXTERNAL_IP}' WHERE option_name = 'siteurl'" # Substituindo EXTERNAL-IP nos comandos MySQL
+          kubectl exec -it $POD_NAME --namespace teste -- mysql -u wordpress -p ${{ secrets.MYSQL_PASS }} -e "$COMMANDS" # Execute o comando dentro do pod
