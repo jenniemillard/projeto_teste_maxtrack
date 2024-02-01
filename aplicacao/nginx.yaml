@@ -53,7 +53,7 @@ metadata:
     #    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: ""
     service.beta.kubernetes.io/aws-load-balancer-name: "lb-app-teste-svc"
     #service.beta.kubernetes.io/aws-load-balancer-scheme: "internal"
-  namespace: teste
+  namespace: cdteste
   labels:
     app: nginx-app-teste
 spec:
