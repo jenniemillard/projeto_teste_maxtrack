@@ -26,21 +26,8 @@ jobs:                                  # Define os trabalhos (jobs) a serem exec
           echo "AWS_KUBE_CONFIG=$HOME/.kube/config" >> $GITHUB_ENV
           echo "KUBECONFIG=$HOME/.kube/config" >> $GITHUB_ENV
           
-      - name: Check PV status
-        run: |
-          PV_STATUS=$(kubectl get pv mysql-pv -o jsonpath='{.status.phase}' --namespace teste)
-          if [ "$PV_STATUS" == "Released" ]; then
-            echo "PV is in 'Released' status. Proceeding with changes..."
-            
-            # Remove claimRef from PV
-            kubectl get pv mysql-pv -o yaml --namespace teste | \
-              sed '/claimRef:/,/uid: /d' | \
-              kubectl apply -f -
-          else
-            echo "PV is not in 'Released' status. Skipping changes."
-          fi
-        env:
-          KUBECONFIG: ${{ github.workspace }}/.kube/config
-       
+      - name: Deploy do PV                                      
+        run: kubectl apply -f ./aplicacao-teste/PVs --namespace teste # aplicando os manifestos Kubernetes para implantar suas aplicações no cluster configurado.
+     
       - name: Deploy to Kubernetes                                      
-        run: kubectl apply -f ./aplicacao-teste/ --namespace teste # aplicando os manifestos Kubernetes para implantar suas aplicações no cluster configurado.
+        run: kubectl apply -k ./aplicacao-teste/ --namespace teste # aplicando os manifestos Kubernetes para implantar suas aplicações no cluster configurado.
