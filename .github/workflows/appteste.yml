@@ -1,4 +1,4 @@
-name: Continuous Deployment
+name: Continuous Deployment Teste Pratico
 
 on:
   push:                                # Especifica que esse fluxo de trabalho deve ser acionado quando ocorrer um evento de push no repositório.
@@ -25,6 +25,10 @@ jobs:                                  # Define os trabalhos (jobs) a serem exec
           aws eks update-kubeconfig --region us-east-1 --name eks-teste   #Utiliza o AWS CLI para atualizar o arquivo kubeconfig local com as credenciais e as informações do cluster EKS.
           echo "AWS_KUBE_CONFIG=$HOME/.kube/config" >> $GITHUB_ENV
           echo "KUBECONFIG=$HOME/.kube/config" >> $GITHUB_ENV
+
+      - name: Install HPA CRD
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/kubernetes/autoscaler/master/vertical-pod-autoscaler/pkg/apis/autoscaling.k8s.io/v2beta2/verticalpodautoscaler.yaml
           
       - name: Deploy do PV                                      
         run: kubectl apply -f ./aplicacao-teste/PVs --namespace teste # aplicando os manifestos Kubernetes para implantar suas aplicações no cluster configurado.
