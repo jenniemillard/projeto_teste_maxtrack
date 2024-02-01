@@ -4,6 +4,8 @@ on:
   push:                                # Especifica que esse fluxo de trabalho deve ser acionado quando ocorrer um evento de push no repositório.
     branches:                          # Limita a execução do fluxo de trabalho apenas às alterações na branch "main".
       - main
+    paths:
+      - 'aplicacao/**' # Especifica que o workflow deve ser acionado apenas para alterações nos arquivos dentro do diretório 'aplicacao'.
 
 jobs:                                  # Define os trabalhos (jobs) a serem executados no contexto deste fluxo de trabalho.
   deploy:                              # Nome do trabalho que será executado.
