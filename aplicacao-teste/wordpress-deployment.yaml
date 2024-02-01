@@ -12,6 +12,37 @@ spec:
     tier: frontend
   type: LoadBalancer
 ---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lb-wordpress-ingress
+  namespace: teste
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/load-balancer-name: "lb-wordpress-ingress"
+    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/target-type: ip
+  labels:
+    app: wordpress
+spec:
+  ingressClassName: alb
+  defaultBackend:
+    service:
+      name: wordpress
+      port:
+        name: http
+  rules:
+  - host: testepratico.com  # Substitua pelo seu domínio real
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: wordpress
+            port:
+              number: 80
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
