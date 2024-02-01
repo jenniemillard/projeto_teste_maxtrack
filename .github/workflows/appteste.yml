@@ -22,10 +22,12 @@ jobs:                                  # Define os trabalhos (jobs) a serem exec
 
       - name: Set up kubectl             # para acessar o cluster Kubernetes no Amazon EKS.
         run: |
-          aws eks update-kubeconfig --region us-east-1 --name eks-teste   #Utiliza o AWS CLI para atualizar o arquivo kubeconfig local com as credenciais e as informações do cluster EKS.
+          aws eks --region us-east-1 update-kubeconfig --name eks-teste
+          mkdir -p $HOME/.kube
+          cp $GITHUB_WORKSPACE/.kube/config $HOME/.kube/config
           echo "AWS_KUBE_CONFIG=$HOME/.kube/config" >> $GITHUB_ENV
           echo "KUBECONFIG=$HOME/.kube/config" >> $GITHUB_ENV
-
+          
       - name: Check PV status
         run: |
           PV_STATUS=$(kubectl get pv mysql-pv -o jsonpath='{.status.phase}' --namespace teste)
