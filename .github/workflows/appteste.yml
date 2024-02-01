@@ -5,7 +5,7 @@ on:
     branches:                          # Limita a execução do fluxo de trabalho apenas às alterações na branch "main".
       - main
     paths:
-      - 'aplicacao-teste/**' # Especifica que o workflow deve ser acionado apenas para alterações nos arquivos dentro do diretório 'aplicacao-teste'.
+      - 'aplicacao-teste/**' # Especifica que o workflow deve ser acionado apenas para alterações nos arquivos dentro do diretório 'aplicacao-teste' .
 
 jobs:                                  # Define os trabalhos (jobs) a serem executados no contexto deste fluxo de trabalho.
   deploy:                              # Nome do trabalho que será executado.
