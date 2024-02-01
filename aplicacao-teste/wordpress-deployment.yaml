@@ -83,8 +83,4 @@ spec:
     name: wordpress
   minReplicas: 1  # Número mínimo de réplicas
   maxReplicas: 4  # Número máximo de réplicas
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      targetCPUUtilizationPercentage: 80 #especifica as métricas com base nas quais o HPA tomará decisões de escalonamento. Neste caso, a métrica é o uso médio da CPU, e o HPA tentará manter o uso médio da CPU em 80%.
+  targetCPUUtilizationPercentage: 80 #especifica as métricas com base nas quais o HPA tomará decisões de escalonamento. Neste caso, a métrica é o uso médio da CPU, e o HPA tentará manter o uso médio da CPU em 80%.
