@@ -1,4 +1,4 @@
-name: Continuous Deployment Teste Pratico
+name: Continuous Deployment Teste Pratico 
 
 on:
   push:                                # Especifica que esse fluxo de trabalho deve ser acionado quando ocorrer um evento de push no repositório.
