@@ -28,7 +28,7 @@ jobs:                                  # Define os trabalhos (jobs) a serem exec
           
       - name: Install VPA CRD
         run: |
-          kubectl apply -f https://raw.githubusercontent.com/kubernetes/autoscaler/master/vertical-pod-autoscaler/deploy/manifests/custom-resource-definitions/verticalpodautoscaler.updater.autoscaling.k8s.io.yaml
+          https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/deploy/vpa-beta2-crd.yaml
        
       - name: Deploy do PV                                      
         run: kubectl apply -f ./aplicacao-teste/PVs --namespace teste # aplicando os manifestos Kubernetes para implantar suas aplicações no cluster configurado.
