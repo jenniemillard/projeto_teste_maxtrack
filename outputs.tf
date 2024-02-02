@@ -1,22 +1,22 @@
 output "cluster_endpoint" {
   description = "Endpoint para EKS control plane"
-  value       = module.eks.cluster_endpoint
+  value       = module.eks.cluster_endpoint                                     #Obtém o valor do endpoint do módulo EKS que é um endpoint para se comunicar com o control plane do EKS.
 }
 
 output "cluster_security_group_id" {
   description = "Security group ids attached to the cluster control plane"
-  value       = module.eks.cluster_security_group_id
+  value       = module.eks.cluster_security_group_id                            #Obtém o valor do ID do grupo de segurança do módulo EKS 
 }
 
 
 output "region" {
   description = "AWS region"
-  value       = var.aws_region
+  value       = var.aws_region                                                  #Obtém o valor da variável var.aws_region, que especifica a região da AWS na qual a infraestrutura está sendo provisionada.                                         
 }
 
 output "cluster_name" {
   description = "Kubernetes Cluster Name"
-  value       = module.eks.cluster_name
+  value       = module.eks.cluster_name                                         #Obtém o valor do nome do cluster do módulo EKS (module.eks.cluster_name), que é o nome atribuído ao cluster Kubernetes.
 }
 
 
